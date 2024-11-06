@@ -1,0 +1,6 @@
+pyinstaller
+pydantic
+prettytable
+art
+tqdm
+keyboard
