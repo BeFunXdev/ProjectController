@@ -28,7 +28,7 @@ class ConsoleSwitcher:
     def up(self):
         if self.selected == 0:
             return
-        os.system('clear')
+        os.system('cls')
         self.selected -= 1
         self.show()
 
@@ -38,7 +38,7 @@ class ConsoleSwitcher:
 
         if self.is_line and self.selected == 1:
             return
-        os.system('clear')
+        os.system('cls')
         self.selected += 1
         self.show()
 
@@ -49,9 +49,11 @@ class ConsoleSwitcher:
             keyboard.add_hotkey('left', self.up, suppress=True)
             keyboard.add_hotkey('right', self.down, suppress=True)
             keyboard.wait('enter', suppress=True)
+            os.system('cls')
             return True if self.selected == 0 else False
         else:
             keyboard.add_hotkey('up', self.up, suppress=True)
             keyboard.add_hotkey('down', self.down, suppress=True)
             keyboard.wait('enter', suppress=True)
+            os.system('cls')
             return self.selected if is_index else self.options[self.selected]

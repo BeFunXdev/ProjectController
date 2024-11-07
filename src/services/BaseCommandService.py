@@ -16,7 +16,7 @@ class BaseCommandService:
         self.configChange.add_project(path, name)
         self.copy_patterns(self.get_pattern(), path)
 
-        self.github_init(command_start, name, git_path)
+        # self.github_init(command_start, name, git_path)
 
     def get_pattern(self):
         patterns = self.configChange.get_patterns()
@@ -37,7 +37,8 @@ class BaseCommandService:
 
                 sub_pattern_index = Console.input_select(sub_patterns, is_index=True)
 
-                result.append(patterns[pattern_index]['sub_pattern'][pattern_name][sub_pattern_index])
+                result.append({'name': pattern_name,
+                               'path': patterns[pattern_index]['sub_pattern'][pattern_name][sub_pattern_index]['path']})
         else:
             result.append(patterns[pattern_index])
 
@@ -49,7 +50,8 @@ class BaseCommandService:
 
     def copy_directory(self, dir_name: str, dir_source: str, dir_target: str):
         os.system(f'cd {dir_target} && mkdir {dir_name}')
-        os.system(f'cd {dir_source} && copy . {dir_target}/{dir_name}')
+        print(f'copy -r {dir_source}\\* {dir_target}/{dir_name}/'.replace('/', '\\'))
+        os.system(f'copy {dir_source}/* {dir_target}/{dir_name}/'.replace('/', '\\'))
 
     def github_init(self, command_start, name, git_path):
         os.system(command_start + f'echo # {name} >> README.md')

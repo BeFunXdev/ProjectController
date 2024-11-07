@@ -17,7 +17,7 @@ class ConfigChange:
 
         data[name] = path
 
-        self.json_write(Path.CONFIG + ConfigFiles.PROJECTS, data)
+        self.json_write(Path.CONFIG + '/' + ConfigFiles.PROJECTS, data)
 
     def add_pattern(self, pattern_name: str, sub_patterns: [str]):
 
