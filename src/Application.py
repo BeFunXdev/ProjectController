@@ -46,6 +46,8 @@ class Application:
         config_path = self.baseCommandService.find_file(ConfigFiles.PROJECT_CONFIG_FILE_NAME, os.getcwd())
         config = self.yamlModule.read_project_config(config_path)
 
+        self.baseCommandService.start(config)
+
     # def _test(self, args, options):
     #     print(Console.input_select(['data1', 'data2', 'data3']))
 

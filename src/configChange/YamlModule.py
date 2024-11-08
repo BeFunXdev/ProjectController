@@ -8,8 +8,10 @@ from src.constaints.ConfigFiles import ConfigFiles
 
 class YamlModule(Consumer):
 
-    def add_pattern(self, part_name: str, data: dict, path: str):
+    def add_pattern(self, part_name: str, data: dict, path: str, project_data: dict):
         config = self.read(path)
+
+        config['project'] = project_data
 
         config[part_name] = data
 
@@ -19,7 +21,7 @@ class YamlModule(Consumer):
         return self.read(path)
 
     def read(self, path):
-        file_path = path + '/' + ConfigFiles.PROJECT_CONFIG_FILE_NAME
+        file_path = path + '\\' + ConfigFiles.PROJECT_CONFIG_FILE_NAME
 
         if os.path.isfile(file_path):
             with open(file_path, 'r') as fh:
@@ -35,4 +37,4 @@ class YamlModule(Consumer):
             yaml.dump(data, fh)
 
     def action(self, data: any):
-        self.add_pattern(data['name'], data['value'], data['path'])
+        self.add_pattern(data['name'], data['value'], data['path'], data['project_data'])

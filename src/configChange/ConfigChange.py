@@ -19,6 +19,11 @@ class ConfigChange:
 
         self.json_write(Path.CONFIG + '/' + ConfigFiles.PROJECTS, data)
 
+    def get_project(self, project_name: str):
+        data_path = Path.CONFIG + '\\' + ConfigFiles.PROJECTS
+        print(self.json_reader(data_path))
+        return self.json_reader(data_path)[project_name]
+
     def add_pattern(self, pattern_name: str, sub_patterns: [str]):
 
         # TODO: Доделать функцию добавления патернов

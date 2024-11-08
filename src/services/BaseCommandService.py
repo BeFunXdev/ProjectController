@@ -9,10 +9,12 @@ class BaseCommandService(Observer):
 
     def __init__(self):
         self.configChange = ConfigChange()
+        self.project_name = ''
 
     def init(self, path: str, name: str, git_path: str):
 
         command_start = f'cd {path} && '
+        self.project_name = name
 
         self.configChange.add_project(path, name)
         self.copy_patterns(self.get_pattern(), path)
@@ -20,8 +22,11 @@ class BaseCommandService(Observer):
         # self.github_init(command_start, name, git_path)
 
     def start(self, project_options: dict):
+        project_path = self.configChange.get_project(project_options['project']['project_name'])
+
         for part_name in project_options:
-            os.system(f'cd {part_name} && {project_options[part_name]["start_command"]}')
+            if part_name != 'project':
+                os.system(f'cd {project_path}/{part_name} && {project_options[part_name]["start_command"]}')
 
     def get_pattern(self):
         patterns = self.configChange.get_patterns()
@@ -52,12 +57,14 @@ class BaseCommandService(Observer):
 
     def copy_patterns(self, patterns, path):
         for pattern in patterns:
-            self.event({'name': pattern['name'], 'value': pattern['default_value'], 'path': path})
+            self.event({'name': pattern['name'], 'value': pattern['default_value'],
+                        'path': path, 'project_data': {
+                    'project_name': self.project_name
+                }})
             self.copy_directory(pattern['name'], pattern['path'], path)
 
     def copy_directory(self, dir_name: str, dir_source: str, dir_target: str):
         os.system(f'cd {dir_target} && mkdir {dir_name}')
-        print(f'copy -r {dir_source}\\* {dir_target}/{dir_name}/'.replace('/', '\\'))
         os.system(f'copy {dir_source}/* {dir_target}/{dir_name}/'.replace('/', '\\'))
 
     def find_file(self, file_name: str, cur_dir: str):
@@ -66,7 +73,7 @@ class BaseCommandService(Observer):
             parent_dir = os.path.dirname(cur_dir)
             if file_name in file_list:
                 print("File Exists in: ", cur_dir)
-                return f'{cur_dir}/{file_name}'
+                return cur_dir
             else:
                 if cur_dir == parent_dir:  # if dir is root dir
                     print("File not found")
